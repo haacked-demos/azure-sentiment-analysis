@@ -28,17 +28,17 @@ public static async Task<object> Run(HttpRequestMessage req, TraceWriter log)
 }
 
 static async Task<double> AnalyzeSentiment(string comment) {
-  return Task.FromResult(0.2);
-//  ITextAnalyticsAPI client = new TextAnalyticsAPI();
-//  client.AzureRegion = AzureRegions.Westcentralus;
-//  client.SubscriptionKey = Environment.GetEnvironmentVariable("TEXT_ANALYTICS_API_KEY", EnvironmentVariableTarget.Process);
-//
-//  SentimentBatchResult results = await client.SentimentAsync(
-//                      new MultiLanguageBatchInput(
-//                          new List<MultiLanguageInput>()
-//                          {
-//                            new MultiLanguageInput("en", "0", comment),
-//                          }));
-//
-//  return results.First().Score;
+  ITextAnalyticsAPI client = new TextAnalyticsAPI();
+  client.AzureRegion = AzureRegions.Westcentralus;
+  client.SubscriptionKey = Environment.GetEnvironmentVariable("TEXT_ANALYTICS_API_KEY", EnvironmentVariableTarget.Process);
+
+  SentimentBatchResult results = await client.SentimentAsync(
+    new MultiLanguageBatchInput(
+        new List<MultiLanguageInput>()
+        {
+          new MultiLanguageInput("en", "0", comment),
+        })
+  );
+
+  return results.First().Score;
 }
