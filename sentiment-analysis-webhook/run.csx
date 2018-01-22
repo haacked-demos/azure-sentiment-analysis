@@ -1,6 +1,7 @@
 #r "Newtonsoft.Json"
 
 using System.Net;
+using System.Linq;
 using Microsoft.Azure.CognitiveServices.Language.TextAnalytics;
 using Microsoft.Azure.CognitiveServices.Language.TextAnalytics.Models;
 using Newtonsoft.Json;
