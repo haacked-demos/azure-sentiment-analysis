@@ -13,10 +13,10 @@ public static async Task<object> Run(HttpRequestMessage req, TraceWriter log)
     var sentimentScore = await AnalyzeSentiment(data.comment.body);
 
     var sentiment = "neutral"
-    if (sentimentScore < 0.2) {
+    if (sentimentScore <= 0.2) {
       sentiment = "negative";
     }
-    if (sentimentScore > 0.8) {
+    if (sentimentScore >= 0.8) {
       sentiment = "positive";
     }
 
@@ -28,16 +28,17 @@ public static async Task<object> Run(HttpRequestMessage req, TraceWriter log)
 }
 
 static async Task<double> AnalyzeSentiment(string comment) {
-  ITextAnalyticsAPI client = new TextAnalyticsAPI();
-  client.AzureRegion = AzureRegions.Westcentralus;
-  client.SubscriptionKey = Environment.GetEnvironmentVariable("TEXT_ANALYTICS_API_KEY", EnvironmentVariableTarget.Process);
-
-  SentimentBatchResult results = await client.SentimentAsync(
-                      new MultiLanguageBatchInput(
-                          new List<MultiLanguageInput>()
-                          {
-                            new MultiLanguageInput("en", "0", comment),
-                          }));
-
-  return results.First().Score;
+  return Task.FromResult(0.2)
+//  ITextAnalyticsAPI client = new TextAnalyticsAPI();
+//  client.AzureRegion = AzureRegions.Westcentralus;
+//  client.SubscriptionKey = Environment.GetEnvironmentVariable("TEXT_ANALYTICS_API_KEY", EnvironmentVariableTarget.Process);
+//
+//  SentimentBatchResult results = await client.SentimentAsync(
+//                      new MultiLanguageBatchInput(
+//                          new List<MultiLanguageInput>()
+//                          {
+//                            new MultiLanguageInput("en", "0", comment),
+//                          }));
+//
+//  return results.First().Score;
 }
