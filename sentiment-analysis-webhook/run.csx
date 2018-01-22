@@ -27,7 +27,7 @@ public static async Task<object> Run(HttpRequestMessage req, TraceWriter log)
     });
 }
 
-static async Task<double> AnalyzeSentiment(string comment) {
+static async double AnalyzeSentiment(string comment) {
   ITextAnalyticsAPI client = new TextAnalyticsAPI();
   client.AzureRegion = AzureRegions.Westcentralus;
   client.SubscriptionKey = Environment.GetEnvironmentVariable("TEXT_ANALYTICS_API_KEY", EnvironmentVariableTarget.Process);
