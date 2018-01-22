@@ -26,7 +26,7 @@ public static async Task<object> Run(HttpRequestMessage req, TraceWriter log)
     log.Info($"Sentiment was '{sentiment}'. Comment: '{data.comment.body}' on '{data.comment.title}'");
 
     return req.CreateResponse(HttpStatusCode.OK, new {
-        body = $"New GitHub comment:  '{data.comment.body}' on '{data.comment.title}'"
+        body = $"Sentiment: '{sentiment}'. Comment: '{data.comment.body}' on '{data.comment.title}'"
     });
 }
 
