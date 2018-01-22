@@ -39,5 +39,5 @@ static async Task<double> AnalyzeSentiment(string comment) {
         {
           new MultiLanguageInput("en", "0", comment),
         })
-  )).Documents.First();
+  )).Documents.First().Score;
 }
