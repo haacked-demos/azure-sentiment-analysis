@@ -12,13 +12,13 @@ public static async Task<object> Run(HttpRequestMessage req, TraceWriter log)
 
     var sentimentScore = await AnalyzeSentiment(data.comment.body);
 
-    var sentiment = "neutral"
-    if (sentimentScore <= 0.2) {
-      sentiment = "negative";
-    }
-    if (sentimentScore >= 0.8) {
-      sentiment = "positive";
-    }
+    string sentiment = "neutral"
+//    if (sentimentScore <= 0.2) {
+//       sentiment = "negative";
+//    }
+//    if (sentimentScore >= 0.8) {
+//      sentiment = "positive";
+//    }
 
     log.Info($"Sentiment was '{sentiment}'. Comment: '{data.comment.body}' on '{data.comment.title}'");
 
