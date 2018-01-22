@@ -33,13 +33,11 @@ static async Task<double> AnalyzeSentiment(string comment) {
   client.AzureRegion = AzureRegions.Westcentralus;
   client.SubscriptionKey = Environment.GetEnvironmentVariable("TEXT_ANALYTICS_API_KEY", EnvironmentVariableTarget.Process);
 
-  SentimentBatchResult results = await client.SentimentAsync(
+  return await client.SentimentAsync(
     new MultiLanguageBatchInput(
         new List<MultiLanguageInput>()
         {
           new MultiLanguageInput("en", "0", comment),
         })
-  );
-
-  return results.First().Score;
+  ).Documents.First();
 }
