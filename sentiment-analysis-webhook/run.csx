@@ -11,7 +11,7 @@ public static async Task<object> Run(HttpRequestMessage req, TraceWriter log)
     string jsonContent = await req.Content.ReadAsStringAsync();
     dynamic data = JsonConvert.DeserializeObject(jsonContent);
 
-    var sentimentScore = await AnalyzeSentiment(data.comment.body);
+    var sentimentScore = await AnalyzeSentiment(data.comment.body as string);
 
     string sentiment = "neutral";
     if (sentimentScore <= 0.2) {
