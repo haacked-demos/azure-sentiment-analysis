@@ -14,12 +14,12 @@ public static async Task<object> Run(HttpRequestMessage req, TraceWriter log)
     var sentimentScore = await AnalyzeSentiment(data.comment.body);
 
     string sentiment = "neutral";
-//    if (sentimentScore <= 0.2) {
-//       sentiment = "negative";
-//    }
-//    if (sentimentScore >= 0.8) {
-//      sentiment = "positive";
-//    }
+    if (sentimentScore <= 0.2) {
+       sentiment = "negative";
+    }
+    if (sentimentScore >= 0.8) {
+      sentiment = "positive";
+    }
 
     log.Info($"Sentiment was '{sentiment}'. Comment: '{data.comment.body}' on '{data.comment.title}'");
 
@@ -28,7 +28,7 @@ public static async Task<object> Run(HttpRequestMessage req, TraceWriter log)
     });
 }
 
-static async Task<double> AnalyzeSentiment(string comment) {
+static async Task<double?> AnalyzeSentiment(string comment) {
   ITextAnalyticsAPI client = new TextAnalyticsAPI();
   client.AzureRegion = AzureRegions.Westcentralus;
   client.SubscriptionKey = Environment.GetEnvironmentVariable("TEXT_ANALYTICS_API_KEY", EnvironmentVariableTarget.Process);
