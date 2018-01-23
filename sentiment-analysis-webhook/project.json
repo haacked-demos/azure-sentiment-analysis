@@ -2,7 +2,8 @@
   "frameworks": {
     "net46":{
       "dependencies": {
-        "Microsoft.Azure.CognitiveServices.Language": "1.0.0-preview"
+        "Microsoft.Azure.CognitiveServices.Language": "1.0.0-preview",
+        "Octokit": "0.28.0"
       }
     }
    }
