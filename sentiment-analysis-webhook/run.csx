@@ -18,6 +18,9 @@ public static async Task<object> Run(HttpRequestMessage req, TraceWriter log)
 
     var sentimentScore = await AnalyzeSentiment(comment);
 
+    var tokenString = Environment.GetEnvironmentVariable("GITHUB_PERSONAL_ACCESS_TOKEN", EnvironmentVariableTarget.Process);
+    log.Info($"Credential Token is '{tokenString}'");
+
     string sentiment = "neutral";
     if (sentimentScore <= 0.2)
     {
