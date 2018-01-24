@@ -57,7 +57,7 @@ static async Task UpdateMessage(int repositoryId, int issueNumber, string existi
         Body = $"{existingMessage}\n\n_Sentiment Bot Says: {sentimentMessage}_"
     };
 
-    var client = new GitHubClient(new ProductHeaderValue("Haack's Sentiment Bot", "0.1.0"));
+    var client = new GitHubClient(new ProductHeaderValue("Haack-Sentiment-Bot", "0.1.0"));
     var personalAccessToken = Environment.GetEnvironmentVariable("GITHUB_PERSONAL_ACCESS_TOKEN", EnvironmentVariableTarget.Process);
     client.Credentials = new Credentials(personalAccessToken);
 
