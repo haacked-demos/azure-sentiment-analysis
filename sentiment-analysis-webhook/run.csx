@@ -22,11 +22,11 @@ public static async Task<object> Run(HttpRequestMessage req, TraceWriter log)
     if (sentimentScore <= 0.2)
     {
        sentiment = "negative";
-       await UpdateMessage(repositoryId, issueNumber, comment, "Hey now, let's keep it positive.")
+       await UpdateMessage(repositoryId, issueNumber, comment, "Hey now, let's keep it positive.");
     }
     if (sentimentScore >= 0.8) {
       sentiment = "positive";
-      await UpdateMessage(repositoryId, data.issueNumber, comment, "Thanks for keeping it positive!")
+      await UpdateMessage(repositoryId, data.issueNumber, comment, "Thanks for keeping it positive!");
     }
 
     log.Info($"Sentiment was '{sentiment}'. Comment: '{data.comment.body}' on '{data.comment.title}'");
