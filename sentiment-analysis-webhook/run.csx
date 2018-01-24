@@ -13,13 +13,13 @@ public static async Task<object> Run(HttpRequestMessage req, TraceWriter log)
     dynamic data = JsonConvert.DeserializeObject(jsonContent);
 
     string comment = data.comment.body;
+    string issueTitle = data.issue.title;
     int repositoryId = data.repository.id;
     int issueNumber = data.issue.number;
 
     var sentimentScore = await AnalyzeSentiment(comment);
 
-    var tokenString = Environment.GetEnvironmentVariable("GITHUB_PERSONAL_ACCESS_TOKEN", EnvironmentVariableTarget.Process);
-    log.Info($"Credential Token is '{tokenString}'");
+    log.Info($"Sentiment Score was '{sentimentScore}'. repositoryId: '{repositoryId}'. issueNumber: '{issueNumber}'. Comment: '{comment}'. Title: '{issueTitle}'");
 
     string sentiment = "neutral";
     if (sentimentScore <= 0.2)
@@ -32,10 +32,8 @@ public static async Task<object> Run(HttpRequestMessage req, TraceWriter log)
       await UpdateMessage(repositoryId, data.issueNumber, comment, "Thanks for keeping it positive!");
     }
 
-    log.Info($"Sentiment was '{sentiment}'. Comment: '{data.comment.body}' on '{data.comment.title}'");
-
     return req.CreateResponse(HttpStatusCode.OK, new {
-        body = $"Sentiment: '{sentiment}'. Comment: '{data.comment.body}' on '{data.comment.title}'"
+        body = $"Sentiment: '{sentiment}'. Comment: '{comment}' on '{issueTitle}'"
     });
 }
 
