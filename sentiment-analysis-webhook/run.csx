@@ -12,6 +12,15 @@ public static async Task<object> Run(HttpRequestMessage req, TraceWriter log)
     string jsonContent = await req.Content.ReadAsStringAsync();
     dynamic data = JsonConvert.DeserializeObject(jsonContent);
 
+    string action = data.action;
+
+    if (!action.Equals("created"))
+    {
+      return req.CreateResponse(HttpStatusCode.OK, new {
+          body = $"Ignored comment that was '{action}'"
+      });
+    }
+
     string comment = data.comment.body;
     string issueTitle = data.issue.title;
     int repositoryId = data.repository.id;
@@ -56,7 +65,7 @@ static async Task<double?> AnalyzeSentiment(string comment)
 static async Task UpdateComment(long repositoryId, int commentId, string existingCommentBody, string sentimentMessage)
 {
     var client = new GitHubClient(new ProductHeaderValue("haack-test-bot", "0.1.0"));
-    var personalAccessToken = "53575a53426c714c2480d7e459b00dde4b1cf897";
+    var personalAccessToken = Environment.GetEnvironmentVariable("GITHUB_PERSONAL_ACCESS_TOKEN", EnvironmentVariableTarget.Process);
     client.Credentials = new Credentials(personalAccessToken);
 
     await client.Issue.Comment.Update(repositoryId, commentId, $"{existingCommentBody}\n\n_Sentiment Bot Says: {sentimentMessage}_");
