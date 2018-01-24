@@ -16,20 +16,21 @@ public static async Task<object> Run(HttpRequestMessage req, TraceWriter log)
     string issueTitle = data.issue.title;
     int repositoryId = data.repository.id;
     int issueNumber = data.issue.number;
+    int commentId = data.comment.id;
 
     var sentimentScore = await AnalyzeSentiment(comment);
 
-    log.Info($"Sentiment Score was '{sentimentScore}'. repositoryId: '{repositoryId}'. issueNumber: '{issueNumber}'. Comment: '{comment}'. Title: '{issueTitle}'");
+    log.Info($"Sentiment Score was '{sentimentScore}'. commentId: {commentId} repositoryId: '{repositoryId}'. issueNumber: '{issueNumber}'. Comment: '{comment}'. Title: '{issueTitle}'");
 
     string sentiment = "neutral";
-    if (sentimentScore <= 0.2)
+    if (sentimentScore <= 0.1)
     {
        sentiment = "negative";
-       await UpdateMessage(repositoryId, issueNumber, comment, "Hey now, let's keep it positive.");
+       await UpdateComment(repositoryId, commentId, comment, "Hey now, let's keep it positive.");
     }
-    if (sentimentScore >= 0.8) {
+    if (sentimentScore >= 0.9) {
       sentiment = "positive";
-      await UpdateMessage(repositoryId, data.issueNumber, comment, "Thanks for keeping it positive!");
+      await UpdateComment(repositoryId, commentId, comment, "Thanks for keeping it positive!");
     }
 
     return req.CreateResponse(HttpStatusCode.OK, new {
@@ -52,15 +53,11 @@ static async Task<double?> AnalyzeSentiment(string comment)
   )).Documents.First().Score;
 }
 
-static async Task UpdateMessage(int repositoryId, int issueNumber, string existingMessage, string sentimentMessage)
+static async Task UpdateComment(long repositoryId, int commentId, string existingCommentBody, string sentimentMessage)
 {
-    var issueUpdate = new IssueUpdate {
-        Body = $"{existingMessage}\n\n_Sentiment Bot Says: {sentimentMessage}_"
-    };
-
-    var client = new GitHubClient(new ProductHeaderValue("Haack-Sentiment-Bot", "0.1.0"));
-    var personalAccessToken = Environment.GetEnvironmentVariable("GITHUB_PERSONAL_ACCESS_TOKEN", EnvironmentVariableTarget.Process);
+    var client = new GitHubClient(new ProductHeaderValue("haack-test-bot", "0.1.0"));
+    var personalAccessToken = "53575a53426c714c2480d7e459b00dde4b1cf897";
     client.Credentials = new Credentials(personalAccessToken);
 
-    await client.Issue.Update(repositoryId, issueNumber, issueUpdate);
+    await client.Issue.Comment.Update(repositoryId, commentId, $"{existingCommentBody}\n\n_Sentiment Bot Says: {sentimentMessage}_");
 }
