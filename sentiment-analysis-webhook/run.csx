@@ -38,19 +38,24 @@ public static async Task<object> Run(HttpRequestMessage req, TraceWriter log)
     int commentId = data.comment.id;
 
     var sentimentScore = await AnalyzeSentiment(comment);
+    string sentiment = "neutral";
+    // We'll update even for neutral comments for demo purposes.
+    string sentimentMessage = $"How very netural. (Score: {sentimentScore})";
 
     log.Info($"Sentiment Score was '{sentimentScore}'. commentId: {commentId} repositoryId: '{repositoryId}'. issueNumber: '{issueNumber}'. Comment: '{comment}'. Title: '{issueTitle}'");
 
-    string sentiment = "neutral";
     if (sentimentScore <= 0.2)
     {
        sentiment = "negative";
-       await UpdateComment(repositoryId, commentId, comment, $"Hey now, let's keep it positive. (Score: {sentimentScore})");
+       sentimentMessage = $"Hey now, let's keep it positive. (Score: {sentimentScore})";
     }
-    if (sentimentScore >= 0.8) {
+    else if (sentimentScore >= 0.8)
+    {
       sentiment = "positive";
-      await UpdateComment(repositoryId, commentId, comment, $"Thanks for keeping it so positive! (Score: {sentimentScore})");
+      sentimentMessage = $"Thanks for keeping it so positive! (Score: {sentimentScore})";
     }
+
+    await UpdateComment(repositoryId, commentId, comment, sentimentMessage);
 
     return req.CreateResponse(HttpStatusCode.OK, new {
         body = $"Sentiment: '{sentiment}'. Comment: '{comment}' on '{issueTitle}'"
